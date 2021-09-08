@@ -22,10 +22,10 @@ public class MainApp {
 
         LessStupidServer lessStupidServer = new LessStupidServer();
         LessStupidClient lessStupidClient = new LessStupidClient();
-        lessStupidClient.doWork(lessStupidServer);
+        lessStupidClient.doWork(stupidServer, lessStupidServer);
         long lstupidEnd = System.currentTimeMillis();
-        
-        System.out.println("End of less tupid client, time = " + (lstupidEnd - lStupidStart));
+
+        System.out.println("End of less stupid client, time = " + (lstupidEnd - lStupidStart));
 
     }
 

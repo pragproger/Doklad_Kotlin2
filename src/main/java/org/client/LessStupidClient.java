@@ -3,40 +3,47 @@ package org.client;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.server.LessStupidServer;
+import org.server.StupidServer;
 
 public class LessStupidClient {
 
-    private static class Pair {
-        public int number;
-        public double result;
-    }
+    private final Map<Integer, Double> results = new ConcurrentHashMap<>();
 
-    public void doWork(LessStupidServer server) {
-        List<CompletableFuture<Pair>> futures = new ArrayList<>();
+    public void doWork(StupidServer stupidServer, LessStupidServer server) {
+        List<CompletableFuture<Double>> futures = new ArrayList<>();
 
         for(int i = 0; i < 10;i++) {
             final int num = i;
 
-            CompletableFuture<Pair> future = server.calculateNumber().thenApply(value -> {
-                Pair pair = new Pair();
-                pair.result = value;
-                pair.number = num;
-                return pair;
+            final CompletableFuture<Double> stupidFuture = new CompletableFuture<>();
+
+            stupidServer.calculateNumber(value -> {
+                stupidFuture.complete(value);
+            });
+
+            CompletableFuture<Double> lessStupidFuture = server.calculateNumber().thenApply(value -> {
+                results.put(num, value);
+                return value;
+            });
+
+            CompletableFuture<Double> future = stupidFuture.thenCombineAsync(lessStupidFuture, (stupidValue, value) -> {
+                return stupidValue + value;
+            });
+
+            future.thenApply(value -> {
+                results.put(num, value);
+                return value;
             });
 
             futures.add(future);
         }
 
-        Map<Object, Optional<Double>> results = futures.stream()
-            .map(CompletableFuture::join)
-            .collect(Collectors.groupingBy(pair -> pair.number,
-                Collectors.mapping(pair -> pair.result,
-                    Collectors.<Double>reducing((l1, l2) -> l1))));
+        CompletableFuture<Void> allFutures = CompletableFuture.allOf(futures.toArray(new CompletableFuture[futures.size()]));
+        allFutures.join();
 
         System.out.println("Final results:" +results);
         server.close();

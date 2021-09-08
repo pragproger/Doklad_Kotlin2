@@ -2,14 +2,15 @@ package org.client;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.server.StupidServer;
 
 public class StupidClient {
 
-    public void doWork(StupidServer server) {
-        Map<Integer, Double> results = new HashMap<>();
+    private final Map<Integer, Double> results = new ConcurrentHashMap<>();
 
+    public void doWork(StupidServer server) {
         for(int i = 0; i < 10;i++) {
             final int num = i;
             server.calculateNumber(result -> {
@@ -17,7 +18,6 @@ public class StupidClient {
                 notifyClient();
             });
         }
-
 
         while (results.size() < 10) {
             synchronized (this) {

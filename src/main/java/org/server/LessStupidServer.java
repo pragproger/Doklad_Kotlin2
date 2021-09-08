@@ -6,7 +6,7 @@ import java.util.concurrent.Executors;
 
 public class LessStupidServer {
 
-    private final ExecutorService executor = Executors.newFixedThreadPool(4);
+    private final ExecutorService executor = Executors.newFixedThreadPool(10);
 
     public CompletableFuture<Double> calculateNumber() {
         CompletableFuture<Double> future = new CompletableFuture<>();
