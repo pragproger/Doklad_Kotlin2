@@ -11,7 +11,8 @@ import org.server.StupidServer
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class CleverClient(val cleverServer: CleverServer,
+class CleverClient(
+    val cleverServer: CleverServer,
     val stupidServer: StupidServer,
     val context: ExecutorCoroutineDispatcher
 ) {
@@ -22,7 +23,7 @@ class CleverClient(val cleverServer: CleverServer,
         val list = mutableListOf<Job>()
 
         val timeStart = System.currentTimeMillis()
-        for(i in 0..9) {
+        for (i in 0..9) {
             list.add(getNumber(cleverServer, results, i))
         }
 
@@ -35,7 +36,9 @@ class CleverClient(val cleverServer: CleverServer,
 
     private suspend fun getNumber(server: CleverServer, map: HashMap<Int, Double>, i: Int): Job {
         return GlobalScope.launch(context) {
-            val cleverDef = server.calculateNumber()
+            val cleverDef = GlobalScope.async(context) {
+                server.calculateNumber()
+            }
 
             val stupidDef = GlobalScope.async(context) {
                 getStupidNumber()
@@ -45,8 +48,10 @@ class CleverClient(val cleverServer: CleverServer,
         }
     }
 
+
     private suspend fun getStupidNumber(): Double {
-        return suspendCoroutine { cont -> stupidServer.calculateNumber( { value ->
+        return suspendCoroutine { cont ->
+            stupidServer.calculateNumber({ value ->
                 cont.resume(value)
             })
         }

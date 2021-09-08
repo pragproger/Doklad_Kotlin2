@@ -1,6 +1,5 @@
 package org.kotlin.server
 
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExecutorCoroutineDispatcher
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -8,7 +7,7 @@ import kotlinx.coroutines.delay
 
 class CleverServer(val context: ExecutorCoroutineDispatcher) {
 
-    suspend fun calculateNumber(): Deferred<Double> {
+    suspend fun calculateNumber(): Double {
         val deferred = GlobalScope.async(context) {
             delay(1000)
 
@@ -20,7 +19,7 @@ class CleverServer(val context: ExecutorCoroutineDispatcher) {
             result
         }
 
-        return deferred
+        return deferred.await()
     }
 
 }
