@@ -30,9 +30,9 @@ public class LessStupidClient {
                 return value;
             });
 
-            CompletableFuture<Double> future = stupidFuture.thenCombineAsync(lessStupidFuture, (stupidValue, value) -> {
-                return stupidValue + value;
-            });
+            CompletableFuture<Double> future = stupidFuture.thenCombineAsync(lessStupidFuture, (stupidValue, value) ->
+                stupidValue + value
+            );
 
             future.thenApply(value -> {
                 results.put(num, value);
