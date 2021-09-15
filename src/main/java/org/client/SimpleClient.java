@@ -1,16 +1,15 @@
 package org.client;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.server.StupidServer;
+import org.server.ThreadedServer;
 
-public class StupidClient {
+public class SimpleClient {
 
     private final Map<Integer, Double> results = new ConcurrentHashMap<>();
 
-    public void doWork(StupidServer server) {
+    public void doWork(ThreadedServer server) {
         for(int i = 0; i < 10;i++) {
             final int num = i;
             server.calculateNumber(result -> {

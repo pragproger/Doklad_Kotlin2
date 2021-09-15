@@ -6,14 +6,14 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.server.LessStupidServer;
-import org.server.StupidServer;
+import org.server.TaskServer;
+import org.server.ThreadedServer;
 
-public class LessStupidClient {
+public class FutureBasedClient {
 
     private final Map<Integer, Double> results = new ConcurrentHashMap<>();
 
-    public void doWork(StupidServer stupidServer, LessStupidServer server) {
+    public void doWork(ThreadedServer stupidServer, TaskServer server) {
         List<CompletableFuture<Double>> futures = new ArrayList<>();
 
         for(int i = 0; i < 10;i++) {

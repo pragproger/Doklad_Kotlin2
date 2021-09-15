@@ -1,6 +1,6 @@
 package org.server;
 
-public class StupidServer {
+public class ThreadedServer {
 
     public void calculateNumber(CalculationCallback callback) {
         Thread thread = new Thread(() -> {

@@ -5,7 +5,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 
-class CleverServer(val context: ExecutorCoroutineDispatcher) {
+class CoroutineServer(val context: ExecutorCoroutineDispatcher) {
 
     suspend fun calculateNumber(): Double {
         val deferred = GlobalScope.async(context) {

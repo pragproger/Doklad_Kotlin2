@@ -1,32 +1,32 @@
 package org;
 
-import org.client.LessStupidClient;
-import org.client.StupidClient;
-import org.server.LessStupidServer;
-import org.server.StupidServer;
+import org.client.FutureBasedClient;
+import org.client.SimpleClient;
+import org.server.TaskServer;
+import org.server.ThreadedServer;
 
 public class MainApp {
 
     public static void main(String[] args) {
         System.out.println("Java concurrency examples");
-        StupidServer stupidServer = new StupidServer();
+        ThreadedServer stupidServer = new ThreadedServer();
 
         long stupidStart = System.currentTimeMillis();
-        System.out.println("Stupid client");
-        StupidClient stupidClient = new StupidClient();
+        System.out.println("Simple client");
+        SimpleClient stupidClient = new SimpleClient();
         stupidClient.doWork(stupidServer);
         long stupidEnd = System.currentTimeMillis();
-        System.out.println("End of stupid client work, time = " + (stupidEnd - stupidStart));
+        System.out.println("End of simple client work, time = " + (stupidEnd - stupidStart));
 
         long lStupidStart = System.currentTimeMillis();
-        System.out.println("Less stupid client");
+        System.out.println("Future based client");
 
-        LessStupidServer lessStupidServer = new LessStupidServer();
-        LessStupidClient lessStupidClient = new LessStupidClient();
+        TaskServer lessStupidServer = new TaskServer();
+        FutureBasedClient lessStupidClient = new FutureBasedClient();
         lessStupidClient.doWork(stupidServer, lessStupidServer);
         long lstupidEnd = System.currentTimeMillis();
 
-        System.out.println("End of less stupid client, time = " + (lstupidEnd - lStupidStart));
+        System.out.println("End of future based client, time = " + (lstupidEnd - lStupidStart));
 
     }
 

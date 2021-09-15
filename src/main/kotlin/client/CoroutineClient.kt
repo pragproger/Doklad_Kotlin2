@@ -6,14 +6,14 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
-import org.kotlin.server.CleverServer
-import org.server.StupidServer
+import org.kotlin.server.CoroutineServer
+import org.server.ThreadedServer
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class CleverClient(
-    val cleverServer: CleverServer,
-    val stupidServer: StupidServer,
+class CoroutineClient(
+    val cleverServer: CoroutineServer,
+    val stupidServer: ThreadedServer,
     val context: ExecutorCoroutineDispatcher
 ) {
 
@@ -36,7 +36,7 @@ class CleverClient(
         println("Time is: " + (timeEnd - timeStart))
     }
 
-    private suspend fun getNumber(server: CleverServer, map: HashMap<Int, Double>, i: Int, quickNum: Double): Job {
+    private suspend fun getNumber(server: CoroutineServer, map: HashMap<Int, Double>, i: Int, quickNum: Double): Job {
         return GlobalScope.launch(context) {
             val cleverDef = GlobalScope.async(context) {
                 server.calculateNumber()
