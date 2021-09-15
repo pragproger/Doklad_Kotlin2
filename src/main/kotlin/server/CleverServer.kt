@@ -22,4 +22,13 @@ class CleverServer(val context: ExecutorCoroutineDispatcher) {
         return deferred.await()
     }
 
+    suspend fun calculateQuickNumber(): Double {
+        val deferred = GlobalScope.async(context) {
+            var result = Math.random() * 100
+            result
+        }
+
+        return deferred.await()
+    }
+
 }

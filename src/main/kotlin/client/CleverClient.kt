@@ -24,7 +24,9 @@ class CleverClient(
 
         val timeStart = System.currentTimeMillis()
         for (i in 0..9) {
-            list.add(getNumber(cleverServer, results, i))
+            val quickNumber = cleverServer.calculateQuickNumber()
+
+            list.add(getNumber(cleverServer, results, i, quickNumber))
         }
 
         list.joinAll()
@@ -34,7 +36,7 @@ class CleverClient(
         println("Time is: " + (timeEnd - timeStart))
     }
 
-    private suspend fun getNumber(server: CleverServer, map: HashMap<Int, Double>, i: Int): Job {
+    private suspend fun getNumber(server: CleverServer, map: HashMap<Int, Double>, i: Int, quickNum: Double): Job {
         return GlobalScope.launch(context) {
             val cleverDef = GlobalScope.async(context) {
                 server.calculateNumber()
@@ -44,7 +46,7 @@ class CleverClient(
                 getStupidNumber()
             }
 
-            map.put(i, cleverDef.await() + stupidDef.await())
+            map.put(i, cleverDef.await() + stupidDef.await() + quickNum)
         }
     }
 
